@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="652.0" prefWidth="643.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Mainframe">
+
+      <Group layoutX="14.0" layoutY="46.0">
+
+            <ListView fx:id="clientsFoldersList" layoutY="36.0" onMouseClicked="#clientsMouseAction" prefHeight="497.0" prefWidth="260.0" />
+            <Button fx:id="clients_button_up" layoutX="209.0" mnemonicParsing="false" onAction="#clientsListUp" prefHeight="25.0" prefWidth="51.0" text="UP" />
+            <TextField fx:id="clientsPath" layoutX="-1.0" prefHeight="25.0" prefWidth="199.0" />
+
+      </Group>
+      <Group layoutX="369.0" layoutY="46.0">
+
+            <ListView fx:id="serversFoldersList" layoutY="36.0" onMouseClicked="#serversMouseAction" prefHeight="497.0" prefWidth="260.0" />
+            <Button fx:id="servers_button_up" layoutX="215.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="45.0" text="UP" />
+            <TextField fx:id="servers_path" prefHeight="25.0" prefWidth="210.0" />
+
+      </Group>
+      <Label layoutX="14.0" layoutY="22.0" prefHeight="17.0" prefWidth="261.0" text="Clients disc" />
+      <Label layoutX="369.0" layoutY="22.0" prefHeight="17.0" prefWidth="260.0" text="Servers disc" />
+      <Button fx:id="btn_to_server" layoutX="307.0" layoutY="212.0" mnemonicParsing="false" onAction="#upload" text="-&gt;" />
+      <Button fx:id="btn_to_client" layoutX="307.0" layoutY="367.0" mnemonicParsing="false" onAction="#download" text="&lt;-" />
+
+
+</AnchorPane>
