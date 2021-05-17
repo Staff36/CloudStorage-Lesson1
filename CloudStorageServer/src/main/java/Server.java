@@ -3,9 +3,10 @@ import Handlers.ClientHandler;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 public class Server {
-
+    private static final Logger logger = Logger.getLogger(Server.class.getName());
     public static void main(String[] args){
         ServerSocket socket = null;
         try {
@@ -16,8 +17,9 @@ public class Server {
         while(true){
             Socket client = null;
             try {
-                System.err.println("Waiting new connection");
+                logger.info("Waiting new connection");
                 client = socket.accept();
+                logger.info("Client " + client + " was connected");
             } catch (IOException e) {
                 e.printStackTrace();
             }

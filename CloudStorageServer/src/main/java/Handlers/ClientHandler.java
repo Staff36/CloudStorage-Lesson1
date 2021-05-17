@@ -67,8 +67,8 @@ public class ClientHandler  extends Thread implements AutoCloseable{
                 bufferedOutputStream.write(data, 0, size);
                 bufferedOutputStream.flush();
                 fileSize -= size;
-                System.out.println(file);
             }
+            logger.info(file + "Has already sent");
         } catch (IOException e) {
             throw new RuntimeException("Upload was wrong " + e);
         }
@@ -89,10 +89,9 @@ public class ClientHandler  extends Thread implements AutoCloseable{
                 bufferedOutputStream.flush();
                 size -= innerDataSize;
             }
-            System.out.println(new File(parentDir.toString() + " " + pathAndName).getAbsolutePath());
-            System.out.println("downloading ok");
+            logger.info("File has already downloaded");
         }catch (IOException e){
-         throw new RuntimeException("Download was wrong " + e);
+         logger.info("Download was wrong " + e);
         }
     }
 
@@ -109,7 +108,7 @@ public class ClientHandler  extends Thread implements AutoCloseable{
                 }
                 dataOutputStream.writeUTF(sb.toString());
             }
-            System.out.println("files was sended");
+            logger.info("Files list has already sent");
         } catch (IOException e) {
             throw new RuntimeException("Sending path " + e);
         }
@@ -118,30 +117,31 @@ public class ClientHandler  extends Thread implements AutoCloseable{
     public void listen() {
         try {
             while (true){
-                System.out.println("listening");
+                logger.info("Waiting new command");
                 String msg = dataInputStream.readUTF();
                 System.out.println(msg);
                 if (msg.startsWith("/download")){
-                    System.out.println("uploading file");
+                    logger.info("Uploading file " + msg.substring(10));
                     uploadFile(msg.substring(10));
                 } else if(msg.startsWith("/upload")){
-                    System.out.println("downloading file");
+                    logger.info("Downloading file " + msg.substring(8));
                     downloadFile(msg.substring(8));
                 } else if(msg.startsWith("/ls")){
-                    System.out.println("sending files list");
                     String[] splitedCommand = splitCommand(msg);
-                    if (splitedCommand.length>1){
+                    if (splitedCommand.length > 1){
+                        logger.info("Sending files list " + splitedCommand[1]);
                         sendListOfFiles(splitedCommand[1]);
                     } else{
+                        logger.info("Irregular command " + msg + " file doesnt exist");
                         sendListOfFiles("");
                     }
                 } else{
-                    System.err.println("SOMETHING WAS WRONG");
+                    logger.info("SOMETHING WAS WRONG");
                     dataOutputStream.writeUTF("Unknown command " + msg);
                 }
             }
         } catch (IOException e) {
-            System.err.print("Exception " + e);
+            logger.info("Exception " + e);
             return;
         } finally {
             try {

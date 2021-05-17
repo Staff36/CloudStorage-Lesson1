@@ -81,7 +81,7 @@ public class NetworkHandler {
                 bufferedOutputStream.write(data, 0, size);
                 bufferedOutputStream.flush();
                 fileSize -= size;
-                logger.info("FileSize now is: " + fileSize);
+                logger.info("File size now is: " + fileSize);
             }
             logger.info("File has already uploaded");
         } catch (IOException e) {
