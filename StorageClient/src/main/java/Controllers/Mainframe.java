@@ -2,7 +2,6 @@ package Controllers;
 
 import Handlers.FileHandler;
 import Handlers.NetworkHandlerImpl;
-import Handlers.NetworkHandlerInt;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListCell;
@@ -16,15 +15,17 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Data
 public class Mainframe  implements Initializable {
     public TextField clientsPath;
+    public TextField serversPath;
     public ListView<String> clientsFoldersList;
     public ListView<String> serversFoldersList;
     private String selectedServersFile;
     private String previousServersFile;
-    private NetworkHandlerInt networkHandler;
+    private NetworkHandlerImpl networkHandler;
     private static Logger logger = Logger.getLogger(Mainframe.class.getName());
     private FileHandler fileHandler;
     private Image file = new Image("https://svl.ua/image/cache/download_pdf-32x32.png");
@@ -36,8 +37,7 @@ public class Mainframe  implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         fileHandler = new FileHandler();
         this.networkHandler = new NetworkHandlerImpl(this);
-        refreshClientsList(File.listRoots());
-        refreshServersList("");
+        repaintClientsList(File.listRoots());
     }
 
 
@@ -46,11 +46,47 @@ public class Mainframe  implements Initializable {
         String selectedItem = clientsFoldersList.getSelectionModel().getSelectedItem();
         fileHandler.updateCurrentClientsFile(selectedItem);
         if (fileHandler.getPreviousFile() != null && fileHandler.getPreviousFile().equals(fileHandler.getCurrentClientsFile()) ) {
-            refreshClientsList(fileHandler.getOrOpen(selectedItem));
+            repaintClientsList(fileHandler.getOrOpen(selectedItem));
         }
     }
 
-    private void refreshClientsList(File[] files) {
+    public void repaintServersList(File[] files){
+        serversFoldersList.getItems().clear();
+        if (files == null || files.length == 0){
+            return;
+        }
+        List<String> list = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
+        serversFoldersList.getItems().addAll(list);
+        serversFoldersList.setCellFactory(param -> new ListCell<String>(){
+            private final ImageView imageView = new ImageView();
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty){
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    if(item.endsWith(".png") || item.endsWith(".jpeg")){
+                        imageView.setImage(image);
+                    } else if (getFileByName(item, files).isFile()){
+                        imageView.setImage(file);
+                    }else {
+                        imageView.setImage(folder);
+                    }
+                    setText(item);
+                    setGraphic(imageView);
+                }
+            }
+        });
+    }
+
+    public File getFileByName(String item, File[] files) {
+        return Arrays.stream(files)
+                .filter(x -> x.getName().equals(item))
+                .findAny().get();
+    }
+
+    public void repaintClientsList(File[] files) {
         logger.info("refreshing clients list");
         clientsFoldersList.getItems().clear();
         if (fileHandler.isRoot(fileHandler.getCurrentDirectory())){
@@ -92,20 +128,21 @@ public class Mainframe  implements Initializable {
     }
 
     public void clientsListUp(ActionEvent actionEvent) {
-        refreshClientsList(fileHandler.getListOfParentDirectory());
+        repaintClientsList(fileHandler.getListOfParentDirectory());
     }
 
-    private void refreshServersList(String path){
-        logger.info("Refreshing servers list  : " + path);
-        networkHandler.getFilesList(path);
-    }
 
     public void serversMouseAction(MouseEvent mouseEvent) {
         previousServersFile = selectedServersFile;
         selectedServersFile = serversFoldersList.getSelectionModel().getSelectedItem();
         if (previousServersFile != null){
             if (previousServersFile.equals(selectedServersFile)){
-                //download or open directory
+                File file = Arrays.stream(networkHandler.getCurrentServerFile().listFiles()).filter(x -> x.getName().equals(selectedServersFile)).findFirst().get();
+                if (file.isDirectory()){
+                    networkHandler.getFilesList(file.getAbsolutePath());;
+                } else {
+
+                }
             }
         }
 
@@ -115,18 +152,18 @@ public class Mainframe  implements Initializable {
             return;
         }
         networkHandler.download(selectedServersFile, fileHandler.getCurrentDirectory());
-        refreshClientsFilesList();
+        repaintClientsList(fileHandler.getFilesListOfCurrentDirectory());
     }
 
 
     public void upload(ActionEvent actionEvent) {
         logger.info("Uploading file " + fileHandler.getCurrentClientsFile());
             networkHandler.upload(fileHandler.getCurrentClientsFile());
-            refreshServersList("");
+            networkHandler.getFilesList("");
     }
 
-    public void refreshClientsFilesList(){
-        refreshClientsList(fileHandler.getFilesListOfCurrentDirectory());
-    }
 
+    public void serversListUp(ActionEvent actionEvent) {
+        networkHandler.getFilesList(networkHandler.getCurrentServerFile().getParent());
+    }
 }

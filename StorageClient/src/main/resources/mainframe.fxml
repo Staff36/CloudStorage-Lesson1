@@ -18,8 +18,8 @@
       <Group layoutX="396.0" layoutY="113.0">
 
             <ListView fx:id="serversFoldersList" layoutY="36.0" onMouseClicked="#serversMouseAction" prefHeight="497.0" prefWidth="260.0" />
-            <Button fx:id="servers_button_up" layoutX="215.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="45.0" text="UP" />
-            <TextField fx:id="servers_path" prefHeight="25.0" prefWidth="210.0" />
+            <Button fx:id="servers_button_up" onAction="#serversListUp" layoutX="215.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="45.0" text="UP" />
+            <TextField fx:id="serversPath" prefHeight="25.0" prefWidth="210.0" />
 
       </Group>
       <Button fx:id="btn_to_server" layoutX="322.0" layoutY="293.0" mnemonicParsing="false" onAction="#upload" text="-&gt;" />

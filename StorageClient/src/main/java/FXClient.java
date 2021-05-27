@@ -9,10 +9,9 @@ import java.util.Objects;
 public class FXClient extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        Parent parent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainFrame.fxml")));
+        Parent parent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainframe.fxml")));
         stage.setScene(new Scene(parent));
         stage.show();
-
     }
 
 

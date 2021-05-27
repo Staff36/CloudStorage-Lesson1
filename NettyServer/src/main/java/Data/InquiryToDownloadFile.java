@@ -8,6 +8,6 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 public class InquiryToDownloadFile implements Serializable {
-    String fileName;
-    String path;
+    private String fileName;
+    private String path;
 }

@@ -2,42 +2,47 @@ package Handlers;
 
 import Controllers.Mainframe;
 import Data.*;
-
+import lombok.Data;
 import java.io.*;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.IntFunction;
-import java.util.stream.Collectors;
-
-public class NetworkHandlerImpl  implements NetworkHandlerInt{
+@Data
+public class NetworkHandlerImpl {
     private final NetworkConnector networkConnector;
     private final Consumer<Object> objectMessageCallBack;
-    private final Mainframe mainframe;
     private Map<File, Integer> bigFilesNames;
+    private Mainframe mainframe;
+    private File currentServerFile;
+
 
     public NetworkHandlerImpl(Mainframe mainframe) {
+        this.mainframe = mainframe;
         this.objectMessageCallBack = this::getFile;
         networkConnector = new NetworkConnector(objectMessageCallBack);
-        new Thread(networkConnector).start();
+        Thread thread = new Thread(networkConnector);
+        thread.setDaemon(true);
+        thread.start();
         bigFilesNames = new HashMap<>();
-        this.mainframe = mainframe;
     }
 
-    @Override
-    public void getFilesList(String name) {
-        networkConnector.writeObject(new FilesListRequest());
+    public void getFilesList(String path) {
+        if (path == ""){
+        networkConnector.writeObject(new FilesListRequest(currentServerFile));
+        }else {
+        File file = Arrays.stream(Objects.requireNonNull(currentServerFile
+                .listFiles()))
+                .filter(x -> x.getAbsolutePath().equals(path))
+                .findFirst().orElse(currentServerFile);
+
+        networkConnector.writeObject(new FilesListRequest(file));
+        }
     }
 
-    @Override
     public void download(String fileName, String path) {
         networkConnector.writeObject(new InquiryToDownloadFile(fileName, path));
     }
 
-    @Override
     public void upload(File file) {
         if (file.isFile()) {
             try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r")) {
@@ -59,6 +64,7 @@ public class NetworkHandlerImpl  implements NetworkHandlerInt{
             }
         }
     }
+
     public void getFile(Object o){
         if (o == null){
             return;
@@ -74,14 +80,11 @@ public class NetworkHandlerImpl  implements NetworkHandlerInt{
         }
     }
 
-
-
     private void updateServersList(FilesList o) {
         FilesList filesList = o;
-        File[] files = filesList.getFiles();
-        List<String> list = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
-        mainframe.getServersFoldersList().getItems().clear();
-        mainframe.getServersFoldersList().getItems().addAll(list);
+        currentServerFile = filesList.getCurrentFile();
+        mainframe.repaintServersList(currentServerFile.listFiles());
+        mainframe.getServersPath().setText(currentServerFile.getAbsolutePath());
     }
 
     private void writePartOfBigFile(BigFilesPart o) {
@@ -99,7 +102,7 @@ public class NetworkHandlerImpl  implements NetworkHandlerInt{
         }
         Integer totalPartsOfFile = bigFilesPart.getTotalPartsValue();
         if (totalPartsOfFile.equals(bigFilesNames.get(file))){
-            // TODO: 26.05.2021  собрать 1 файл из частей и удалить части
+            // TODO: 26.05.2021  собрать 1 файл из частей и временные файлы
         }
     }
 
@@ -110,9 +113,10 @@ public class NetworkHandlerImpl  implements NetworkHandlerInt{
                     .toFile();
         try(RandomAccessFile randomAccessFile = new RandomAccessFile(path, "rw")){
             randomAccessFile.write(regularFile.getData());
-            mainframe.refreshClientsFilesList();
+            mainframe.repaintClientsList(mainframe.getFileHandler().getFilesListOfCurrentDirectory());;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(o);
     }
 }

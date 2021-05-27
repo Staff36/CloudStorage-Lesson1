@@ -1,6 +1,5 @@
 package Data;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.File;
@@ -9,10 +8,10 @@ import java.io.Serializable;
 @Data
 public class BigFilesPart implements Serializable {
 
-    int partsNumber;
-    int totalPartsValue;
-    byte[] data;
-    File file;
+    private int partsNumber;
+    private int totalPartsValue;
+    private byte[] data;
+    private File file;
 
 
     public BigFilesPart(int partsNumber, int totalPartsValue, byte[] data, File file) {

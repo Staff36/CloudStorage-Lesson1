@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 @Data
 public class RegularFile implements Serializable {
-    byte[] data;
-    File file;
+    private byte[] data;
+    private File file;
 
     public RegularFile(byte[] data, File file) {
         this.data = data;
