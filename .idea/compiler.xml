@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="CloudStorageServer" />
         <module name="StorageClient" />
+        <module name="NettyServer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

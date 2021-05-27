@@ -24,8 +24,8 @@ public class FileHandler {
         currentDirectory = filesList.get(0).getAbsolutePath();
     }
 
-    public boolean isRoot(String name){
-        return Arrays.stream(File.listRoots()).anyMatch(x->x.getAbsolutePath().equals(name));
+    public boolean isRoot(String absolutePath){
+        return Arrays.stream(File.listRoots()).anyMatch(x->x.getAbsolutePath().equals(absolutePath));
     }
 
 
@@ -82,5 +82,17 @@ public class FileHandler {
     }
     public File[] getFilesListOfCurrentDirectory(){
         return new File(currentDirectory).listFiles();
+    }
+
+    public File getFileByName(String item) {
+        return filesList.stream()
+                .filter(x-> {
+            if (isRoot(x.getAbsolutePath())) {
+                return x.getAbsolutePath().equals(item);
+            } else {
+               return x.getName().equals(item);
+            }
+        })
+                .findAny().get();
     }
 }
