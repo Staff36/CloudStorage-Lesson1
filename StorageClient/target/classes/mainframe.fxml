@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="725.0" prefWidth="693.0" style="-fx-background-color: linear-gradient( #002CC7, #E1E1E1);;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Mainframe">
+
+      <Group layoutX="30.0" layoutY="113.0">
+
+            <ListView fx:id="clientsFoldersList" layoutY="36.0" onMouseClicked="#clientsMouseAction" prefHeight="497.0" prefWidth="260.0" />
+            <Button fx:id="clients_button_up" layoutX="209.0" mnemonicParsing="false" onAction="#clientsListUp" prefHeight="25.0" prefWidth="51.0" text="UP" />
+            <TextField fx:id="clientsPath" prefHeight="25.0" prefWidth="199.0" />
+
+      </Group>
+      <Group layoutX="396.0" layoutY="113.0">
+
+            <ListView fx:id="serversFoldersList" layoutY="36.0" onMouseClicked="#serversMouseAction" prefHeight="497.0" prefWidth="260.0" />
+            <Button fx:id="servers_button_up" onAction="#serversListUp" layoutX="215.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="45.0" text="UP" />
+            <TextField fx:id="serversPath" prefHeight="25.0" prefWidth="210.0" />
+
+      </Group>
+      <Button fx:id="btn_to_server" layoutX="322.0" layoutY="293.0" mnemonicParsing="false" onAction="#upload" text="-&gt;" />
+      <Button fx:id="btn_to_client" layoutX="322.0" layoutY="419.0" mnemonicParsing="false" onAction="#download" text="&lt;-" />
+   <ImageView fitHeight="44.0" fitWidth="73.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@logo.png" />
+      </image>
+   </ImageView>
+      <Label layoutX="30.0" layoutY="89.0" prefHeight="17.0" prefWidth="261.0" text="Clients disc" textFill="WHITE">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font>
+   </Label>
+      <Label layoutX="396.0" layoutY="89.0" prefHeight="17.0" prefWidth="260.0" text="Servers disc" textFill="WHITE">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font>
+   </Label>
+
+
+</AnchorPane>

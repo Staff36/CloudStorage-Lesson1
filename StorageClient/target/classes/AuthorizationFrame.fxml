@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="271.0" prefWidth="514.0" style="-fx-background-color: rgba(225, 225, 225, 1); -fx-background-image: new;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AuthoryzeController">
+   <children>
+      <ImageView fitHeight="339.0" fitWidth="514.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@NET%5D.jpeg" />
+         </image>
+      </ImageView>
+      <Button layoutX="279.0" layoutY="157.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Login" />
+      <Button layoutX="187.0" layoutY="157.0" mnemonicParsing="false" text="Sign up" />
+      <PasswordField layoutX="187.0" layoutY="120.0" promptText="Password" />
+      <TextField layoutX="187.0" layoutY="84.0" promptText="Login" />
+   </children>
+</AnchorPane>
